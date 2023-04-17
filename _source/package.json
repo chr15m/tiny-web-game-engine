@@ -2,7 +2,8 @@
   "name": "twge",
   "description": "Tiny Web Game Engine",
   "dependencies": {
-    "shadow-cljs":"^2.22.10"
+    "preact": "^10.13.2",
+    "shadow-cljs": "^2.22.10"
   },
   "scripts": {
     "setup": "mkdir -p public; cd public; for f in index.html game.js twge.css; do ln -s ../../$f; done",

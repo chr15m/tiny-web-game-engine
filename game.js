@@ -1,8 +1,14 @@
-import { timeout } from "./twge.js";
+import { timeout, draw } from "./twge.js";
+// import twge from "./twge.js";
+// const { render, timeout } = twge;
 
-console.log("before");
-var t = await timeout(1000);
-console.log("after");
+console.log("before")
+var t = await timeout(1000)
+console.log("after")
+
+draw()
+
+// render()
 
 /*
 await dino = image("dino.png")

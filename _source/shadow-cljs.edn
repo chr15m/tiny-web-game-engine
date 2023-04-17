@@ -8,4 +8,6 @@
            :exports-var twge/generate-exports
            :release {:output-dir ".."}
            :devtools {:watch-dir "public"}
-           :modules {:twge {:exports {timeout twge/timeout}}}}}}
+           :modules {:twge {:exports {default twge/default
+                                      timeout twge/timeout
+                                      draw twge/draw}}}}}}
