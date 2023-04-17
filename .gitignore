@@ -1,5 +1,6 @@
 .*.swp
 _source/public
+.cache
 node_modules
 *lock*
 .shadow-cljs
