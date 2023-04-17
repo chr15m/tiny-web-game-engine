@@ -7,15 +7,14 @@
 }
 
 .twge-entity {
-  --entity-w: 0px;
-  --entity-h: 0px;
+  --entity-w: initial;
+  --entity-h: initial;
   --entity-x: 0px;
   --entity-y: 0px;
   --entity-z: 0px;
   --entity-r: 0deg;
   --entity-o: 1;
-  --entity-s: 1;  
-  position: absolute;
+  --entity-s: 1;
   width: var(--entity-w);
   height: var(--entity-h);
   transform: translate3d(var(--entity-x), var(--entity-y), var(--entity-z)) scale(var(--entity-s)) rotate(var(--entity-r));

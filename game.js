@@ -1,12 +1,12 @@
-import { timeout, draw } from "./twge.js";
-// import twge from "./twge.js";
-// const { render, timeout } = twge;
+import { timeout, draw, image } from "./twge.js";
 
 console.log("before")
 var t = await timeout(1000)
 console.log("after")
 
-draw()
+var dino = await image("https://www.spriters-resource.com/resources/sheet_icons/75/78171.png")
+
+draw([dino])
 
 // render()
 

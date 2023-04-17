@@ -9,5 +9,6 @@
            :release {:output-dir ".."}
            :devtools {:watch-dir "public"}
            :modules {:twge {:exports {default twge/default
+                                      image twge/image
                                       timeout twge/timeout
                                       draw twge/draw}}}}}}
