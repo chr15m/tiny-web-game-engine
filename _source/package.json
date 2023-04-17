@@ -1,0 +1,11 @@
+{
+  "name": "twge",
+  "description": "Tiny Web Game Engine",
+  "dependencies": {
+    "shadow-cljs":"^2.22.10"
+  },
+  "scripts": {
+    "watch": "npx shadow-cljs watch twge",
+    "build": "npx shadow-cljs release twge"
+  }
+}

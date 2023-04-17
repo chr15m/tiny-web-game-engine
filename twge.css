@@ -1,0 +1,39 @@
+.twge {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.twge-entity {
+  --entity-w: 0px;
+  --entity-h: 0px;
+  --entity-x: 0px;
+  --entity-y: 0px;
+  --entity-z: 0px;
+  --entity-r: 0deg;
+  --entity-o: 1;
+  --entity-s: 1;  
+  position: absolute;
+  width: var(--entity-w);
+  height: var(--entity-h);
+  transform: translate3d(var(--entity-x), var(--entity-y), var(--entity-z)) scale(var(--entity-s)) rotate(var(--entity-r));
+  transform-origin: center center;
+  opacity: var(--entity-o);
+}
+
+.loader {
+  animation: loader 0.33s linear infinite;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  border: 3px solid transparent;
+  border-left: 3px solid silver;
+  border-right: 3px solid silver;
+}
+
+@keyframes loader {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

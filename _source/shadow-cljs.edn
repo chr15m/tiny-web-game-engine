@@ -1,0 +1,11 @@
+{:source-paths ["src"]
+ :dependencies [[applied-science/js-interop "0.2.7"]
+                [funcool/promesa "6.0.2"]]
+ :dev-http {8000 "public"}
+ :builds {:twge
+          {:target :esm
+           :output-dir "public"
+           :exports-var twge/generate-exports
+           :release {:output-dir ".."}
+           :devtools {:watch-dir "public"}
+           :modules {:twge {:exports {timeout twge/timeout}}}}}}
