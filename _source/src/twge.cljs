@@ -4,6 +4,8 @@
     [applied-science.js-interop :as j]
     ["preact" :refer [h render]]))
 
+; collisions: https://stackoverflow.com/a/19614185
+
 (defn ^:export timeout [ms]
   (p/delay ms))
 
@@ -17,8 +19,11 @@
 
 (defn image [url]
   (p/let [i (load-image url)]
-    (h "img" #js {:src (j/get i :src)
-                  :class "twge-entity"})))
+    (fn [props]
+      (h "img" #js {:src (j/get i :src)
+                    :class "twge-entity"
+                    :style #js {"--x" (j/get props :x)
+                                "--y" (j/get props :y)}}))))
 
 (defn ^:export draw [entities]
   (let [app (h "div" nil entities)

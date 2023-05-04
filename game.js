@@ -1,23 +1,11 @@
 import { timeout, draw, image } from "./twge.js";
 
-console.log("before")
-var t = await timeout(1000)
-console.log("after")
+var face = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f603.svg")
+var bomb = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4a3.svg")
 
-var dino = await image("https://www.spriters-resource.com/resources/sheet_icons/75/78171.png")
-
-draw([dino])
-
-// render()
+draw([face({"x": "300px", "y": "-50px"}), face({"x": "50px", "y": "200px"}), bomb({"x": "-200px"})])
 
 /*
-await dino = image("dino.png")
-await cactus = image("cactus.png")
-
-height = 0;
-v = 0;
-gravity = 2;
-
 forever(() => {
   if (keyDown(13)) {
     v = 5;
