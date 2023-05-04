@@ -17,9 +17,10 @@
   --entity-s: 1;
   width: var(--entity-w);
   height: var(--entity-h);
-  transform: translate3d(var(--entity-x), var(--entity-y), var(--entity-z)) scale(var(--entity-s)) rotate(var(--entity-r));
+  transform: translate(-50%, -50%) translate3d(var(--entity-x), var(--entity-y), var(--entity-z)) scale(var(--entity-s)) rotate(var(--entity-r));
   transform-origin: center center;
   opacity: var(--entity-o);
+  position: absolute;
 }
 
 .loader {
