@@ -7,7 +7,7 @@
            :output-dir "public"
            :exports-var twge/generate-exports
            :release {:output-dir ".."}
-           :devtools {:watch-dir "public"}
+           :devtools {:watch-dir ".."}
            :modules {:twge {:exports {default twge/default
                                       image twge/image
                                       timeout twge/timeout
