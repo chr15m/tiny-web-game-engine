@@ -11,7 +11,7 @@
   (js/Promise.
     (fn [res err]
       (let [i (js/Image.)]
-        (j/assoc! i "onload" (res i))
+        (j/assoc! i "onload" #(res i))
         (j/assoc! i "onerror" err)
         (j/assoc! i "src" url)))))
 
