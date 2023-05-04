@@ -7,19 +7,19 @@
 }
 
 .twge-entity {
-  --entity-w: initial;
-  --entity-h: initial;
-  --entity-x: 0px;
-  --entity-y: 0px;
-  --entity-z: 0px;
-  --entity-r: 0deg;
-  --entity-o: 1;
-  --entity-s: 1;
-  width: var(--entity-w);
-  height: var(--entity-h);
-  transform: translate(-50%, -50%) translate3d(var(--entity-x), var(--entity-y), var(--entity-z)) scale(var(--entity-s)) rotate(var(--entity-r));
+  --w: initial;
+  --h: initial;
+  --x: 0px;
+  --y: 0px;
+  --z: 0px;
+  --r: 0deg;
+  --o: 1;
+  --s: 1;
+  width: var(--w);
+  height: var(--h);
+  transform: translate(-50%, -50%) translate3d(var(--x), var(--y), var(--z)) scale(var(--s)) rotate(var(--r));
   transform-origin: center center;
-  opacity: var(--entity-o);
+  opacity: var(--o);
   position: absolute;
 }
 
