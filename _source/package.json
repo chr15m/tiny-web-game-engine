@@ -6,7 +6,7 @@
     "shadow-cljs": "^2.22.10"
   },
   "scripts": {
-    "setup": "mkdir -p public; cd public; for f in index.html game.js twge.css; do ln -s ../../$f; done",
+    "setup": "mkdir -p public; cd public; for f in index.html game.js twge.css; do ln -sf ../../$f; done",
     "watch": "npm run setup; npx shadow-cljs watch twge",
     "build": "npx shadow-cljs release twge"
   }
