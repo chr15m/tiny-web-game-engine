@@ -20,10 +20,16 @@
 (defn image [url]
   (p/let [i (load-image url)]
     (fn [props]
-      (h "img" #js {:src (j/get i :src)
-                    :class "twge-entity"
-                    :style #js {"--x" (j/get props :x)
-                                "--y" (j/get props :y)}}))))
+      (let [style (.reduce
+                    (j/lit [:x :y :w :h])
+                    (fn [style k]
+                      (j/assoc! style
+                                (str "--" k)
+                                (j/get props k)))
+                    #js {})]
+        (h "img" #js {:src (j/get i :src)
+                      :class "twge-entity"
+                      :style style})))))
 
 (defn ^:export draw [entities]
   (let [app (h "div" nil entities)
