@@ -10,5 +10,6 @@
            :devtools {:watch-dir ".."}
            :modules {:twge {:exports {default twge/default
                                       image twge/image
+                                      emoji twge/emoji
                                       wait twge/wait
                                       scene twge/scene}}}}}}

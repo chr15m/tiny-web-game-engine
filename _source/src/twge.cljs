@@ -49,6 +49,12 @@
         {:element el
          :set set-fn}))))
 
+(defn emoji [character & [props]]
+  (let [code-point (j/call character :codePointAt 0)
+        hex (j/call code-point :toString 16)
+        url (str "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/" hex ".svg")]
+    (image url props)))
+
 (def root (.getElementById js/document "twge-default"))
 
 (def scene
