@@ -74,3 +74,9 @@
             (j/call (j/get scene :root)
                     :appendChild
                     (j/get entity :element)))}))
+
+(defn frame []
+  (js/Promise.
+    (fn [res]
+      (let [now (js/Date.)]
+        (js/requestAnimationFrame #(res (- (js/Date.) now)))))))

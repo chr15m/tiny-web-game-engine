@@ -12,4 +12,5 @@
                                       image twge/image
                                       emoji twge/emoji
                                       wait twge/wait
+                                      frame twge/frame
                                       scene twge/scene}}}}}}

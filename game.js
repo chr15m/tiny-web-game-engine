@@ -1,4 +1,4 @@
-import { wait, image, emoji, scene } from "./twge.js";
+import { wait, image, emoji, scene, frame } from "./twge.js";
 
 //var face = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f603.svg")
 //var face = await image("https://cdn2.f-cdn.com/contestentries/1093125/13547116/5987856c88b79_thumb900.jpg")
@@ -23,6 +23,11 @@ await wait(500);
 face.set("x", -200);
 
 console.log("x", face.get("x"));
+
+while (true) {
+  var elapsed = await frame();
+  console.log("elapsed", elapsed);
+}
 
 // console.log(goober());
 
