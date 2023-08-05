@@ -18,6 +18,10 @@ var s = scene.new();
 //await wait(1);
 scene.add(s, face);
 
+await wait(500);
+
+face.set("x", -200);
+
 console.log("x", face.get("x"));
 
 // console.log(goober());

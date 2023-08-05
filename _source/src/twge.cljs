@@ -34,22 +34,27 @@
                   (j/get props k))))
     #js {}))
 
+(defn set-fn
+  ([entity props]
+    (let [tmp (h "img" (j/lit {:style (get-style props)}))]
+      (j/assoc! entity :props props)
+      ; TODO: is there a faster way to copy styles than text conversion?
+      ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
+      (j/assoc-in! entity [:element :style] (j/get-in tmp [:style :cssText]))))
+  ([entity k v]
+    (let [props (j/get entity :props)]
+      (j/assoc! props k v)
+      (set-fn entity props))))
+
 (defn image [url & [props]]
   (p/let [i (load-image url)]
     (let [style (when props (get-style props))
           el (h "img" (j/lit {:src (j/get i :src)
                               :className "twge-entity"
                               :style style}))
-          set-fn (fn [props]
-                   (let [tmp (h "img" (j/lit {:style (get-style props)}))]
-                     (j/assoc! el :props props)
-                     ; TODO: is there a faster way to copy styles than text conversion?
-                     ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
-                     (j/assoc! el :style (j/get-in tmp [:style :cssText]))))]
-      (j/lit
-        {:element el
-         :set set-fn
-         :get #(j/get-in el [:props %])}))))
+          entity (j/lit {:element el})]
+      (j/assoc! entity :set (partial set-fn entity))
+      (j/assoc! entity :get #(j/get-in entity [:props %])))))
 
 (defn emoji [character & [props]]
   (let [code-point (j/call character :codePointAt 0)
