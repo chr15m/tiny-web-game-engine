@@ -42,12 +42,14 @@
                               :style style}))
           set-fn (fn [props]
                    (let [tmp (h "img" (j/lit {:style (get-style props)}))]
+                     (j/assoc! el :props props)
                      ; TODO: is there a faster way to copy styles than text conversion?
                      ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
                      (j/assoc! el :style (j/get-in tmp [:style :cssText]))))]
       (j/lit
         {:element el
-         :set set-fn}))))
+         :set set-fn
+         :get #(j/get-in el [:props %])}))))
 
 (defn emoji [character & [props]]
   (let [code-point (j/call character :codePointAt 0)

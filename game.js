@@ -18,6 +18,8 @@ var s = scene.new();
 //await wait(1);
 scene.add(s, face);
 
+console.log("x", face.get("x"));
+
 // console.log(goober());
 
 // scene_add(face);
