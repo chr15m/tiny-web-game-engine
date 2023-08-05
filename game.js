@@ -24,9 +24,18 @@ face.set("x", -200);
 
 console.log("x", face.get("x"));
 
+/*scene.on("keydown", (ev) => {
+  if (ev.code == "RightArrow") {
+    var x = face.get("x");
+    face.set("x", x + 100);
+  }
+})*/
+
 while (true) {
-  var elapsed = await frame();
-  console.log("elapsed", elapsed);
+  //var result = await frame();
+  //console.log("result", result);
+  var [ elapsed, events ] = await frame();
+  console.log("frame", elapsed, events);
 }
 
 // console.log(goober());
