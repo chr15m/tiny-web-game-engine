@@ -53,7 +53,7 @@
                               :className "twge-entity"
                               :style style}))
           entity (j/lit {:element el})]
-      (j/assoc! entity :set (partial set-fn entity))
+      (j/assoc! entity :set (.bind set-fn nil entity))
       (j/assoc! entity :get #(j/get-in entity [:props %])))))
 
 (defn emoji [character & [props]]
