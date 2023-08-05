@@ -10,5 +10,5 @@
            :devtools {:watch-dir ".."}
            :modules {:twge {:exports {default twge/default
                                       image twge/image
-                                      timeout twge/timeout
+                                      wait twge/wait
                                       scene twge/scene}}}}}}

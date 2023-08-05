@@ -6,7 +6,7 @@
 
 ; collisions: https://stackoverflow.com/a/19614185
 
-(defn timeout [ms]
+(defn wait [ms]
   (p/delay ms))
 
 (defn load-image [url]
