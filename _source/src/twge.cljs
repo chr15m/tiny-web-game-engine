@@ -70,7 +70,7 @@
     {:new (fn [alternate-root]
             (let [r (or alternate-root root)]
               (j/assoc! r :innerHTML "")
-              (.addEventListener js/document "keydown" (fn [ev] (js/console.log ev) (.push events ev)))
+              (.addEventListener js/document "keydown" #(.push events %))
               (.focus r)
               (j/lit {:root r})))
      :add (fn [scene entity]
@@ -83,5 +83,12 @@
     (fn [res]
       (let [now (js/Date.)]
         (js/requestAnimationFrame
-          #(let [queued-events (.splice events 0 (dec (j/get events :length)))]
+          #(let [queued-events (.splice events 0 (j/get events :length))]
              (res [(- (js/Date.) now) queued-events])))))))
+
+(defn happened [events code & [event-type]]
+  (let [found (.filter events #(= (j/get % :code) code))
+        found (if event-type
+                (.filter found #(= (j/get % :type) event-type))
+                found)]
+    (not= (j/get found :length) 0)))

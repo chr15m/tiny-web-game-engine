@@ -1,4 +1,4 @@
-import { wait, image, emoji, scene, frame } from "./twge.js";
+import { wait, image, emoji, scene, frame, happened } from "./twge.js";
 
 //var face = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f603.svg")
 //var face = await image("https://cdn2.f-cdn.com/contestentries/1093125/13547116/5987856c88b79_thumb900.jpg")
@@ -35,7 +35,14 @@ while (true) {
   //var result = await frame();
   //console.log("result", result);
   var [ elapsed, events ] = await frame();
-  console.log("frame", elapsed, events);
+  if (happened(events, "ArrowRight")) {
+    var x = face.get("x");
+    face.set("x", x + 100);
+  }
+  if (happened(events, "ArrowLeft")) {
+    var x = face.get("x");
+    face.set("x", x + -100);
+  }
 }
 
 // console.log(goober());
