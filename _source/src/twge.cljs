@@ -18,9 +18,9 @@
         (j/assoc! i "src" url)))))
 
 (defn default-unit [t v]
-  (let [unit (cond (not= (.indexOf (j/lit [:x :y :w :h]) t) -1) "px")]
-    (if (or (= (type v) js/Number)
-            (= (str (js/parseFloat v)) v))
+  (let [unit (cond (not (coercive-= (.indexOf (j/lit [:x :y :w :h]) t) -1)) "px")]
+    (if (or (coercive-= (type v) js/Number)
+            (coercive-= (str (js/parseFloat v)) v))
       (str v unit)
       v)))
 
@@ -87,8 +87,8 @@
              (res [(- (js/Date.) now) queued-events])))))))
 
 (defn happened [events code & [event-type]]
-  (let [found (.filter events #(= (j/get % :code) code))
+  (let [found (.filter events #(coercive-= (j/get % :code) code))
         found (if event-type
-                (.filter found #(= (j/get % :type) event-type))
+                (.filter found #(coercive-= (j/get % :type) event-type))
                 found)]
-    (not= (j/get found :length) 0)))
+    (not (coercive-= (j/get found :length) 0))))
