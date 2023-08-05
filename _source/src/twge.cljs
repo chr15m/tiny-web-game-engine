@@ -17,13 +17,21 @@
         (j/assoc! i "onerror" err)
         (j/assoc! i "src" url)))))
 
+(defn default-unit [t v]
+  (let [unit (cond (not= (.indexOf (j/lit [:x :y :w :h]) t) -1) "px")]
+    (if (or (= (type v) js/Number)
+            (= (str (js/parseFloat v)) v))
+      (str v unit)
+      v)))
+
 (defn get-style [props]
   (.reduce
     (j/lit [:x :y :w :h])
     (fn [style k]
       (j/assoc! style
                 (str "--" k)
-                (j/get props k)))
+                (default-unit k
+                  (j/get props k))))
     #js {}))
 
 (defn image [url & [props]]

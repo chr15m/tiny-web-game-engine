@@ -1,6 +1,7 @@
 import { timeout, image, scene } from "./twge.js";
 
 var face = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f603.svg")
+//var face = await image("https://cdn2.f-cdn.com/contestentries/1093125/13547116/5987856c88b79_thumb900.jpg")
 var bomb = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4a3.svg")
 
 /* draw([face({"x": "300px", "y": "-50px", "w": "64px", "h": "64px"}),
@@ -9,7 +10,7 @@ var bomb = await image("https://raw.githubusercontent.com/twitter/twemoji/master
 
 //await timeout(500);
 
-face.set({"x": "300px", "y": "-50px", "w": "64px", "h": "64px"});
+face.set({"x": 300, "y": -50, "w": 64, "h": 64});
 
 var s = scene.new();
 //await timeout(1);
