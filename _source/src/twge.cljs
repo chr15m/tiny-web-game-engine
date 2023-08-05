@@ -4,7 +4,10 @@
     [applied-science.js-interop :as j]
     ["hyperscript" :as h]))
 
-; collisions: https://stackoverflow.com/a/19614185
+; the weird clojurescript coding style in this file is to retain a small build size
+
+; TODO: collisions: https://stackoverflow.com/a/19614185
+; TODO: catch browser errors and show a popup about opening the console
 
 (defn wait [ms]
   (p/delay ms))
@@ -18,48 +21,51 @@
         (j/assoc! i "src" url)))))
 
 (defn default-unit [t v]
-  (let [unit (cond (not (coercive-= (.indexOf (j/lit [:x :y :w :h]) t) -1)) "px")]
+  (let [unit (when (not (coercive-= (.indexOf (j/lit [:x :y :w :h]) t) -1)) "px")]
     (if (or (coercive-= (type v) js/Number)
-            (coercive-= (str (js/parseFloat v)) v))
-      (str v unit)
+            (coercive-= (.toString (js/parseFloat v)) v))
+      (.concat "" v unit)
       v)))
 
 (defn get-style [props]
   (.reduce
-    (j/lit [:x :y :w :h])
+    #js ["x" "y" "w" "h"]
     (fn [style k]
-      (j/assoc! style
-                (str "--" k)
-                (default-unit k
-                  (j/get props k))))
+      (let [v (aget props k)]
+        (aset style (.concat "--" k) (default-unit k v))
+        style))
     #js {}))
 
 (defn set-fn
-  ([entity props]
-    (let [tmp (h "img" (j/lit {:style (get-style props)}))]
-      (j/assoc! entity :props props)
+  [entity k-or-props v]
+  (if v
+    (let [props (aget entity "props")]
+      (aset props k-or-props v)
+      (set-fn entity props nil))
+    (let [tmp (h "img" (j/lit {:style (get-style k-or-props)}))
+          style-string (-> (j/get tmp :style) (j/get :cssText))]
+      (j/assoc! entity :props k-or-props)
       ; TODO: is there a faster way to copy styles than text conversion?
       ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
-      (j/assoc-in! entity [:element :style] (j/get-in tmp [:style :cssText]))))
-  ([entity k v]
-    (let [props (j/get entity :props)]
-      (j/assoc! props k v)
-      (set-fn entity props))))
+      (aset entity "element" "style" style-string))))
 
-(defn image [url & [props]]
-  (p/let [i (load-image url)]
-    (let [style (when props (get-style props))
-          el (h "img" (j/lit {:src (j/get i :src)
-                              :className "twge-entity"
-                              :style style}))
-          entity (j/lit {:element el})]
-      (j/assoc! entity :set (.bind set-fn nil entity))
-      (j/assoc! entity :get #(j/get-in entity [:props %])))))
+(defn image [url props]
+  (-> (load-image url)
+      (.then
+        (fn [i]
+          (let [style (when props (get-style props))
+                el (h "img" (j/lit {:src (j/get i :src)
+                                    :className "twge-entity"
+                                    :style style}))
+                entity (j/lit {:element el})]
+            (j/assoc! entity :set (.bind set-fn nil entity))
+            (j/assoc! entity :get #(-> (aget entity "props") (aget %)))
+            entity)))))
 
-(defn emoji [character & [props]]
+(defn emoji [character props]
   (let [code-point (j/call character :codePointAt 0)
         hex (j/call code-point :toString 16)
-        url (str "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/" hex ".svg")]
+        url (.concat "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/" hex ".svg")]
     (image url props)))
 
 (def root (.getElementById js/document "twge-default"))
@@ -84,9 +90,9 @@
       (let [now (js/Date.)]
         (js/requestAnimationFrame
           #(let [queued-events (.splice events 0 (j/get events :length))]
-             (res [(- (js/Date.) now) queued-events])))))))
+             (res (j/lit [(- (js/Date.) now) queued-events]))))))))
 
-(defn happened [events code & [event-type]]
+(defn happened [events code event-type]
   (let [found (.filter events #(coercive-= (j/get % :code) code))
         found (if event-type
                 (.filter found #(coercive-= (j/get % :type) event-type))
