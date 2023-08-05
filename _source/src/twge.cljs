@@ -2,11 +2,11 @@
   (:require
     [promesa.core :as p]
     [applied-science.js-interop :as j]
-    ["preact" :refer [h render]]))
+    ["hyperscript" :as h]))
 
 ; collisions: https://stackoverflow.com/a/19614185
 
-(defn ^:export timeout [ms]
+(defn timeout [ms]
   (p/delay ms))
 
 (defn load-image [url]
@@ -17,22 +17,39 @@
         (j/assoc! i "onerror" err)
         (j/assoc! i "src" url)))))
 
-(defn image [url]
-  (p/let [i (load-image url)]
-    (fn [props]
-      (let [style (.reduce
-                    (j/lit [:x :y :w :h])
-                    (fn [style k]
-                      (j/assoc! style
-                                (str "--" k)
-                                (j/get props k)))
-                    #js {})]
-        (h "img" #js {:src (j/get i :src)
-                      :class "twge-entity"
-                      :style style})))))
+(defn get-style [props]
+  (.reduce
+    (j/lit [:x :y :w :h])
+    (fn [style k]
+      (j/assoc! style
+                (str "--" k)
+                (j/get props k)))
+    #js {}))
 
-(defn ^:export draw [entities]
-  (let [app (h "div" nil entities)
-        el (.getElementById js/document "twge-default")]
-    (j/assoc! el "innerHTML" "")
-    (render app el)))
+(defn image [url & [props]]
+  (p/let [i (load-image url)]
+    (let [style (when props (get-style props))
+          el (h "img" (j/lit {:src (j/get i :src)
+                              :className "twge-entity"
+                              :style style}))
+          set-fn (fn [props]
+                   (let [tmp (h "img" (j/lit {:style (get-style props)}))]
+                     ; TODO: is there a faster way to copy styles than text conversion?
+                     ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
+                     (j/assoc! el :style (j/get-in tmp [:style :cssText]))))]
+      (j/lit
+        {:element el
+         :set set-fn}))))
+
+(def root (.getElementById js/document "twge-default"))
+
+(def scene
+  (j/lit
+    {:new (fn [alternate-root]
+            (let [r (or alternate-root root)]
+              (j/assoc! r :innerHTML "")
+              (j/lit {:root r})))
+     :add (fn [scene entity]
+            (j/call (j/get scene :root)
+                    :appendChild
+                    (j/get entity :element)))}))

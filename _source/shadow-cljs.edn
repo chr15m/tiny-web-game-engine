@@ -11,4 +11,4 @@
            :modules {:twge {:exports {default twge/default
                                       image twge/image
                                       timeout twge/timeout
-                                      draw twge/draw}}}}}}
+                                      scene twge/scene}}}}}}

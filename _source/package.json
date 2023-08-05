@@ -2,7 +2,7 @@
   "name": "twge",
   "description": "Tiny Web Game Engine",
   "dependencies": {
-    "preact": "^10.13.2",
+    "hyperscript": "^2.0.2",
     "shadow-cljs": "^2.22.10"
   },
   "scripts": {
