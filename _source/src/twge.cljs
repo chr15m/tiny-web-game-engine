@@ -32,7 +32,8 @@
     #js ["x" "y" "w" "h"]
     (fn [style k]
       (let [v (aget props k)]
-        (aset style (.concat "--" k) (default-unit k v))
+        (when v
+          (aset style (.concat "--" k) (default-unit k v)))
         style))
     #js {}))
 
