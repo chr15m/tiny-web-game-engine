@@ -12,6 +12,8 @@
 (defn wait [ms]
   (p/delay ms))
 
+; *** entity related functions *** ;
+
 (defn load-image [url]
   (js/Promise.
     (fn [res err]
@@ -68,6 +70,8 @@
         hex (j/call code-point :toString 16)
         url (.concat "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/" hex ".svg")]
     (image url props)))
+
+; *** scene related functions *** ;
 
 ; TODO: move this global onto scene?
 (def events #js [])

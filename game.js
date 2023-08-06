@@ -20,11 +20,11 @@ while (true) {
   var [ elapsed, events ] = await frame();
   if (happened(events, "ArrowRight")) {
     var x = face.get("x");
-    face.set("x", x + 100);
+    face.set("x", x + 64);
   }
   if (happened(events, "ArrowLeft")) {
     var x = face.get("x");
-    face.set("x", x + -100);
+    face.set("x", x + -64);
   }
   //redraw([face]);
 }
