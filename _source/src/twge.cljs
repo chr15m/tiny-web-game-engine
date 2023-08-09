@@ -47,7 +47,7 @@
       (set-fn entity props nil))
     (let [tmp (h "img" (j/lit {:style (get-style k-or-props)}))
           style-string (-> (j/get tmp :style) (j/get :cssText))]
-      (j/assoc! entity :props k-or-props)
+      (j/update-in! entity [:props] #(js/Object.assign % k-or-props))
       ; TODO: is there a faster way to copy styles than text conversion?
       ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
       (aset entity "element" "style" style-string))))
