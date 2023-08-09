@@ -68,7 +68,9 @@
 (defn emoji [character props]
   (let [code-point (j/call character :codePointAt 0)
         hex (j/call code-point :toString 16)
-        url (.concat "https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/" hex ".svg")]
+        url (.concat "https://raw.githubusercontent.com/"
+                     "twitter/twemoji/master/assets/svg/"
+                     hex ".svg")]
     (image url props)))
 
 ; *** scene related functions *** ;
