@@ -1,4 +1,4 @@
-import { emoji, scene, frame, happened } from "./twge.js";
+import { emoji, image, scene, frame, happened } from "./twge.js";
 // import {wait, image, emoji, scene, frame, happened } from "https://cdn.jsdelivr.net/gh/chr15m/tiny-web-game-engine/twge.js"
 
 //var face = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f603.svg")
@@ -6,25 +6,23 @@ import { emoji, scene, frame, happened } from "./twge.js";
 //var bomb = await image("https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4a3.svg")
 
 var face = await emoji("👻");
+var square = await emoji("🟧");
 
-face.set({"x": 300, "y": -50, "w": 64, "h": 64});
+//face.set({"x": 300, "y": -50, "w": 64, "h": 64});
+face.set({"w": 64, "h": 64});
+square.set({"w": 64, "h": 64});
 
 var s = scene();
+s.add(square);
 s.add(face);
-
-face.set("x", -200);
-
-console.log("x", face.get("x"));
 
 while (true) {
   var [ elapsed, events ] = await frame();
   if (happened(events, "ArrowRight")) {
-    var x = face.get("x");
-    face.set("x", x + 64);
+    face.set("x", face.get("x") + 64);
   }
   if (happened(events, "ArrowLeft")) {
-    var x = face.get("x");
-    face.set("x", x + -64);
+    face.set("x", face.get("x") + -64);
   }
   //redraw([face]);
 }
