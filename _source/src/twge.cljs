@@ -76,14 +76,14 @@
 ; TODO: move this global onto scene?
 (def events #js [])
 
-(defn add [scene entity]
-  (j/call (j/get scene :root)
+(defn add [parent entity]
+  (j/call (j/get parent :element)
           :appendChild
           (j/get entity :element)))
 
-(defn scene [root]
-  (let [r (or root (.getElementById js/document "twge-default"))
-        s (j/lit {:root r})]
+(defn scene [element]
+  (let [r (or element (.getElementById js/document "twge-default"))
+        s (j/lit {:element r})]
     (j/assoc! r :innerHTML "")
     (.addEventListener js/document "keydown" #(.push events %))
     (.focus r)
