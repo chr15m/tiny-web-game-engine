@@ -14,12 +14,19 @@
   --z: 0px;
   --r: 0deg;
   --o: 1;
-  --s: 1;
+  --sx: 1;
+  --sy: 1;
+  --l: initial;
+  --ax: center;
+  --ay: center;
+  --ox: 0px;
+  --oy: 0px;
   width: var(--w);
   height: var(--h);
-  transform: translate(-50%, -50%) translate3d(var(--x), var(--y), var(--z)) scale(var(--s)) rotate(var(--r));
-  transform-origin: center center;
+  transform: translate(var(--ox), var(--oy)) translate3d(var(--x), var(--y), var(--z)) scale(var(--sx), var(--sy)) rotate(var(--r));
+  transform-origin: var(--ay) var(--ax);
   opacity: var(--o);
+  z-index: var(--l);
   position: absolute;
 }
 
