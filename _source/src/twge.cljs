@@ -52,18 +52,29 @@
       ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
       (aset entity "element" "style" style-string))))
 
+; *** entity types *** ;
+
+(defn entity [props]
+  (j/lit {:props
+          (js/Object.assign
+            #js {:x 0 :y 0}
+            props)}))
+
 (defn image [url props]
   (-> (load-image url)
       (.then
         (fn [i]
-          (let [style (when props (get-style props))
+          (let [e (entity props)
+                style (get-style (j/get e :props))
                 el (h "img" (j/lit {:src (j/get i :src)
                                     :className "twge-entity"
-                                    :style style}))
-                entity (j/lit {:element el})]
-            (j/assoc! entity :set (.bind set-fn nil entity))
-            (j/assoc! entity :get #(-> (aget entity "props") (aget %)))
-            entity)))))
+                                    :style style
+                                    :entity e}))]
+            (js/console.log "entity" e)
+            (j/assoc! e :element el)
+            (j/assoc! e :set (.bind set-fn nil e))
+            (j/assoc! e :get #(-> (aget e "props") (aget %)))
+            e)))))
 
 (defn emoji [character props]
   (let [code-point (j/call character :codePointAt 0)
