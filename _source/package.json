@@ -3,11 +3,14 @@
   "description": "Tiny Web Game Engine",
   "dependencies": {
     "hyperscript": "^2.0.2",
+    "nbb": "^1.2.175",
     "shadow-cljs": "^2.22.10"
   },
   "scripts": {
     "setup": "mkdir -p public; cd public; for f in index.html game.js twge.css; do ln -sf ../../$f; done",
     "watch": "npm run setup; npx shadow-cljs watch twge",
-    "build": "npx shadow-cljs release twge"
+    "build": "npx shadow-cljs release twge",
+    "size": "npm run build && ls -alh ../twge.js",
+    "doc": "npx nbb src/doc.cljs > ../API.md"
   }
 }

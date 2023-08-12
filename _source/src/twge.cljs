@@ -1,4 +1,5 @@
 (ns twge
+  "These are the functions you can import from twge to make your game."
   (:require
     [promesa.core :as p]
     [applied-science.js-interop :as j]
@@ -10,7 +11,9 @@
 ; TODO: catch browser errors and show a popup about opening the console
 ; TODO: throw kid-friendly error messages for things like missing args
 
-(defn wait [ms]
+(defn sleep
+  "Returns a promise (so use `await`) which finishes after `ms` delay."
+  [ms]
   (p/delay ms))
 
 ; *** entity related functions *** ;
@@ -41,6 +44,9 @@
     #js {}))
 
 (defn assign
+  "Set properties of an entity.
+  You can pass the property name and the value such as `x` and `12`,
+  or a set of key-value pairs to set more than one like this: `{x: 23, y: 15}`."
   [entity k-or-props v]
   (if v
     (let [props (aget entity "props")]
@@ -58,8 +64,14 @@
     (aset ent "element" "style" style-string))
   ent)
 
-(defn redraw [ent]
+(defn redraw
+  "Redraw a scene or entity. If a scene is passed it recursively redraws all entities.
+  Usually you should call this once on the scene at the end of each game loop.
+  If you have changed an entity's properties like x, y position,
+  calling this will update the entity on the screen to the new position."
+  [ent]
   (when-let [el (aget ent "element")]
+    ; (js/console.log (j/call-in el #js [:classList :contains] "hello"))
     (when (or (-> el .-classList (.contains "twge-entity"))
               (-> el .-classList (.contains "twge")))
       (recompute-styles ent)
@@ -69,12 +81,18 @@
 
 ; *** entity types *** ;
 
-(defn entity [props]
+(defn entity
+  "Create a new entity data structure.
+  
+  - `props` are optional initial properties to set such as `x`, `y`, `w`, `h`, etc."
+  [props]
   (j/lit (js/Object.assign
            #js {:x 0 :y 0}
            props)))
 
-(defn image [url props]
+(defn image
+  "Create a new `entity` data structure based on a single image."
+  [url props]
   (-> (load-image url)
       (.then
         (fn [i]
@@ -89,7 +107,11 @@
             (recompute-styles e)
             e)))))
 
-(defn emoji [character props]
+(defn emoji
+  "Create a new `entity` data structure based on an emoji.
+  
+  - `character` is the literal emoji character such as '👻'."
+  [character props]
   (let [code-point (j/call character :codePointAt 0)
         hex (j/call code-point :toString 16)
         url (.concat "https://raw.githubusercontent.com/"
@@ -102,12 +124,21 @@
 ; TODO: move this global onto scene?
 (def events #js [])
 
-(defn add [parent entity]
+(defn add
+  "Add an entity to a parent.
+  
+  - `parent` is usually going to be the scene."
+  [parent entity]
   (j/call (j/get parent :element)
           :appendChild
           (j/get entity :element)))
 
-(defn scene [element]
+(defn scene
+  "Create a new scene data structure.
+  
+  - `element` is an optional argument to set up the scene in an
+    HTML element other than `twge-default`."
+  [element]
   (let [r (or element (.getElementById js/document "twge-default"))
         s (j/lit {:element r})]
     (j/assoc! r :innerHTML "")
@@ -115,7 +146,14 @@
     (.focus r)
     (j/assoc! s :add #(add s %))))
 
-(defn frame []
+(defn frame
+  "Wait for the next animation frame.
+  Generally you should call this once per game loop with `await` as it returns a Promise.
+
+  - returns a Promise holding [elapsed-time, events]
+  - `elapsed-time` is the number of milliseconds since the last frame.
+  - `events` is a list of input events that occured since the last frame."
+  []
   (js/Promise.
     (fn [res]
       (let [now (js/Date.)]
@@ -123,7 +161,13 @@
           #(let [queued-events (.splice events 0 (j/get events :length))]
              (res (j/lit [(- (js/Date.) now) queued-events]))))))))
 
-(defn happened [events code event-type]
+(defn happened
+  "Test if specific events happened in an event list (such as `events` passed back from the `frame` call).
+  
+  - `events` is a list of events to pass in. Usually from the `frame` call.
+  - `code` is the key-code to check on keydown events.
+  - `event-type` is optional and is an event type like `keydown` or `keyup`."
+  [events code event-type]
   (let [found (.filter events #(coercive-= (j/get % :code) code))
         found (if event-type
                 (.filter found #(coercive-= (j/get % :type) event-type))
