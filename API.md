@@ -19,15 +19,15 @@ Redraw a scene or entity. If a scene is passed it recursively redraws all entiti
 
 Create a new entity data structure.
   
-  - `props` are the initial properties to set such as `x`, `y`, `w`, `h`, etc.
+  - `props` are optional initial properties to set such as `x`, `y`, `w`, `h`, etc.
 
 ##  image  ( url props )
 
-Create a new entity data structure based on a single image.
+Create a new `entity` data structure based on a single image.
 
 ##  emoji  ( character props )
 
-Create a new entity data structure based on an emoji.
+Create a new `entity` data structure based on an emoji.
   
   - `character` is the literal emoji character such as '👻'.
 
