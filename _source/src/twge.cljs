@@ -8,6 +8,7 @@
 
 ; TODO: collisions: https://stackoverflow.com/a/19614185
 ; TODO: catch browser errors and show a popup about opening the console
+; TODO: throw kid-friendly error messages for things like missing args
 
 (defn wait [ms]
   (p/delay ms))
@@ -39,41 +40,52 @@
         style))
     #js {}))
 
-(defn set-fn
+(defn assign
   [entity k-or-props v]
   (if v
     (let [props (aget entity "props")]
       (aset props k-or-props v)
-      (set-fn entity props nil))
-    (let [tmp (h "img" (j/lit {:style (get-style k-or-props)}))
-          style-string (-> (j/get tmp :style) (j/get :cssText))]
-      (j/update-in! entity [:props] #(js/Object.assign % k-or-props))
-      ; TODO: is there a faster way to copy styles than text conversion?
-      ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
-      (aset entity "element" "style" style-string))))
+      (assign entity props nil))
+    (js/Object.assign entity k-or-props)))
+
+; *** drawing routines *** ;
+
+(defn recompute-styles [ent]
+  (let [tmp (h "img" (j/lit {:style (get-style ent)}))
+        style-string (-> (j/get tmp :style) (j/get :cssText))]
+    ; TODO: is there a faster way to copy styles than text conversion?
+    ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
+    (aset ent "element" "style" style-string))
+  ent)
+
+(defn redraw [ent]
+  (when (or (j/call-in ent [:element :classList :contains] "twge-entity")
+            (j/call-in ent [:element :classList :contains] "twge"))
+    (recompute-styles ent)
+    (doseq [el (j/get-in ent [:element :children])]
+      (redraw (j/get el :entity))))
+  ent)
 
 ; *** entity types *** ;
 
 (defn entity [props]
-  (j/lit {:props
-          (js/Object.assign
-            #js {:x 0 :y 0}
-            props)}))
+  (j/lit (js/Object.assign
+           #js {:x 0 :y 0}
+           props)))
 
 (defn image [url props]
   (-> (load-image url)
       (.then
         (fn [i]
           (let [e (entity props)
-                style (get-style (j/get e :props))
+                style (get-style e)
                 el (h "img" (j/lit {:src (j/get i :src)
                                     :className "twge-entity"
                                     :style style
                                     :entity e}))]
-            (js/console.log "entity" e)
             (j/assoc! e :element el)
-            (j/assoc! e :set (.bind set-fn nil e))
-            (j/assoc! e :get #(-> (aget e "props") (aget %)))
+            (j/assoc! e :assign (.bind assign nil e))
+            (recompute-styles e)
             e)))))
 
 (defn emoji [character props]

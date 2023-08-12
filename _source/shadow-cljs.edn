@@ -13,5 +13,7 @@
                                       emoji twge/emoji
                                       wait twge/wait
                                       frame twge/frame
+                                      assign twge/assign
+                                      redraw twge/redraw
                                       happened twge/happened
                                       scene twge/scene}}}}}}
