@@ -8,7 +8,7 @@
   },
   "scripts": {
     "setup": "mkdir -p public; cd public; for f in index.html game.js twge.css; do ln -sf ../../$f; done",
-    "watch": "npm run setup; npx shadow-cljs watch twge",
+    "watch": "npm run setup; pnpm i --no-lockfile --shamefully-hoist; npx shadow-cljs watch twge",
     "build": "npx shadow-cljs release twge",
     "size": "npm run build && ls -alh ../twge.js",
     "doc": "npx nbb src/doc.cljs > ../API.md"
