@@ -23,7 +23,7 @@
   --oy: 0px;
   width: var(--w);
   height: var(--h);
-  transform: translate(var(--ox), var(--oy)) translate3d(var(--x), var(--y), var(--z)) scale(var(--sx), var(--sy)) rotate(var(--r));
+  transform: translate(var(--ox), calc(-1 * var(--oy))) translate3d(var(--x), calc(-1 * var(--y)), var(--z)) scale(var(--sx), var(--sy)) rotate(var(--r));
   transform-origin: var(--ay) var(--ax);
   opacity: var(--o);
   z-index: var(--l);
