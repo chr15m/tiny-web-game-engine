@@ -59,11 +59,12 @@
   ent)
 
 (defn redraw [ent]
-  (when (or (j/call-in ent [:element :classList :contains] "twge-entity")
-            (j/call-in ent [:element :classList :contains] "twge"))
-    (recompute-styles ent)
-    (doseq [el (j/get-in ent [:element :children])]
-      (redraw (j/get el :entity))))
+  (when-let [el (aget ent "element")]
+    (when (or (-> el .-classList (.contains "twge-entity"))
+              (-> el .-classList (.contains "twge")))
+      (recompute-styles ent)
+      (.map (js/Array.from (aget ent "element" "children"))
+            #(redraw (aget % "entity")))))
   ent)
 
 ; *** entity types *** ;
