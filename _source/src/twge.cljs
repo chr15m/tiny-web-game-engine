@@ -1,5 +1,9 @@
 (ns twge
-  "These are the functions you can import from twge to make your game."
+  "This documentation describes the different functions you can use to make a game.
+
+  Some notes about this game engine:
+
+  - Entities at 0,0 appear in the center of the screen."
   (:require
     [promesa.core :as p]
     [applied-science.js-interop :as j]
@@ -10,6 +14,8 @@
 ; TODO: collisions: https://stackoverflow.com/a/19614185
 ; TODO: catch browser errors and show a popup about opening the console
 ; TODO: throw kid-friendly error messages for things like missing args
+; TODO: a container entity to put entities into together
+; TODO: function to get scene size
 
 (defn sleep
   "Returns a promise (so use `await`) which finishes after `ms` delay."
