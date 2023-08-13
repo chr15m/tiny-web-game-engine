@@ -118,11 +118,11 @@
   
   - `character` is the literal emoji character such as '👻'."
   [character props]
-  (let [code-point (j/call character :codePointAt 0)
-        hex (j/call code-point :toString 16)
+  (let [code-points (.map (js/Array.from character) #(j/call % :codePointAt 0))
+        hexes (.map code-points #(j/call % :toString 16))
         url (.concat "https://raw.githubusercontent.com/"
                      "twitter/twemoji/master/assets/svg/"
-                     hex ".svg")]
+                     (.join hexes "-") ".svg")]
     (image url props)))
 
 ; *** scene related functions *** ;
