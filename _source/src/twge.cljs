@@ -14,7 +14,6 @@
 ; TODO: collisions: https://stackoverflow.com/a/19614185
 ; TODO: catch browser errors and show a popup about opening the console
 ; TODO: throw kid-friendly error messages for things like missing args
-; TODO: a container entity to put entities into together
 ; TODO: function to get scene size
 
 (defn sleep
@@ -85,6 +84,15 @@
             #(redraw (aget % "entity")))))
   ent)
 
+(defn add
+  "Add an entity to a parent.
+  
+  - `parent` is usually going to be the scene."
+  [parent entity]
+  (j/call (j/get parent :element)
+          :appendChild
+          (j/get entity :element)))
+
 ; *** entity types *** ;
 
 (defn entity
@@ -105,7 +113,7 @@
           (let [e (entity props)
                 style (get-style e)
                 el (h "img" (j/lit {:src (j/get i :src)
-                                    :className "twge-entity"
+                                    :className "twge twge-entity"
                                     :style style
                                     :entity e}))]
             (j/assoc! e :element el)
@@ -125,19 +133,28 @@
                      (.join hexes "-") ".svg")]
     (image url props)))
 
+(defn container
+  "Create a new `entity` data structure that acts as a container for other entities.
+  
+  The container can hold multiple entities and can be added to a parent (like a scene or another container) as a single entity."
+  [props children]
+  (let [e (entity props)
+        style (get-style e)
+        el (h "div" (j/lit {:className "twge twge-entity twge-container"
+                            :style style
+                            :entity e}))]
+    (j/assoc! e :element el)
+    (j/assoc! e :assign (.bind assign nil e))
+    (j/assoc! e :add #(add e %))
+    (when children
+      (.map children (fn [c] (add e c))))
+    (recompute-styles e)
+    e))
+
 ; *** scene related functions *** ;
 
 ; TODO: move this global onto scene?
 (def events #js [])
-
-(defn add
-  "Add an entity to a parent.
-  
-  - `parent` is usually going to be the scene."
-  [parent entity]
-  (j/call (j/get parent :element)
-          :appendChild
-          (j/get entity :element)))
 
 (defn scene
   "Create a new scene data structure.
