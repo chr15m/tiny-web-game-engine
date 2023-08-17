@@ -1,7 +1,7 @@
 (ns twge
   "This documentation describes the different functions you can use to make a game.
 
-  Some notes about this game engine:
+  ## Notes
 
   - Entities at 0,0 appear in the center of the screen."
   (:require
@@ -12,6 +12,7 @@
 ; the weird clojurescript coding style in this file is to retain a small build size
 
 ; TODO: collisions: https://stackoverflow.com/a/19614185
+; TODO: effect function to apply css effects
 ; TODO: catch browser errors and show a popup about opening the console
 ; TODO: throw kid-friendly error messages for things like missing args
 ; TODO: function to get scene size
@@ -126,6 +127,7 @@
 
 (defn emoji
   "Create a new `entity` data structure based on an emoji.
+  Emoji entities will always be square. Set their size using the width (w) setting.
   
   - `character` is the literal emoji character such as '👻'."
   [character props]
