@@ -52,7 +52,7 @@
     (fn [style k]
       (let [v (aget props k)]
         (when v
-          (aset style (.concat "--" k) (str (default-unit k v))))
+          (aset style (.concat "--" k) (.toString (default-unit k v))))
         style))
     #js {}))
 
@@ -62,7 +62,7 @@
   or a set of key-value pairs to set more than one like this: `{x: 23, y: 15}`."
   [entity k-or-props v]
   (if v
-    (assign entity (j/lit {k-or-props v}) nil)
+    (aset entity k-or-props v)
     (js/Object.assign entity k-or-props)))
 
 ; *** drawing routines *** ;
