@@ -57,9 +57,7 @@
   or a set of key-value pairs to set more than one like this: `{x: 23, y: 15}`."
   [entity k-or-props v]
   (if v
-    (let [props (aget entity "props")]
-      (aset props k-or-props v)
-      (assign entity props nil))
+    (assign entity (j/lit {k-or-props v}) nil)
     (js/Object.assign entity k-or-props)))
 
 ; *** drawing routines *** ;
@@ -102,12 +100,12 @@
 
 (defn entity
   "Create a new entity data structure.
-  
+
   - `props` are optional initial properties to set such as `x`, `y`, `w`, `h`, etc."
   [props]
-  (j/lit (js/Object.assign
-           #js {:x 0 :y 0}
-           props)))
+  (assign
+    #js {:x 0 :y 0}
+    props nil))
 
 (defn image
   "Create a new `entity` data structure based on a single image."
