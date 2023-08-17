@@ -16,6 +16,12 @@
                 (print)
                 (print doc)
                 (print)))
-      ;:def (print "DEF" form)
+      :def (let [n (second form)
+                 doc (nth form 2)]
+             (when (and (= (type doc) js/String) (> (count form) 3))
+               (print "## " n)
+               (print)
+               (print doc)
+               (print)))
       ;:ns (print "NS" form)
       nil)))
