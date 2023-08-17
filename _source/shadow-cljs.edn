@@ -17,4 +17,5 @@
                                       redraw twge/redraw
                                       happened twge/happened
                                       container twge/container
+                                      all twge/all
                                       scene twge/scene}}}}}}

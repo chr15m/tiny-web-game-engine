@@ -24,6 +24,10 @@
   [ms]
   (p/delay ms))
 
+(def all
+  "Wait for an array of several awaits."
+  (js/Promise.all.bind js/Promise))
+
 ; *** entity related functions *** ;
 
 (defn load-image [url]
