@@ -16,6 +16,8 @@
 ; TODO: throw kid-friendly error messages for things like missing args
 ; TODO: function to get scene size
 
+(def unit "vmin")
+
 (defn sleep
   "Returns a promise (so use `await`) which finishes after `ms` delay."
   [ms]
@@ -32,19 +34,20 @@
         (j/assoc! i "src" url)))))
 
 (defn default-unit [t v]
-  (let [unit (when (not (coercive-= (.indexOf (j/lit [:x :y :w :h]) t) -1)) "px")]
-    (if (or (coercive-= (type v) js/Number)
-            (coercive-= (.toString (js/parseFloat v)) v))
+  (let [unit (when (not (coercive-= (.indexOf (j/lit [:x :y :w :h]) t) -1)) unit)]
+    (if (and unit
+             (or (coercive-= (type v) js/Number)
+                 (coercive-= (.toString (js/parseFloat v)) v)))
       (.concat "" v unit)
       v)))
 
 (defn get-style [props]
   (.reduce
-    #js ["x" "y" "w" "h"]
+    #js ["x" "y" "w" "h" "scale"]
     (fn [style k]
       (let [v (aget props k)]
         (when v
-          (aset style (.concat "--" k) (default-unit k v)))
+          (aset style (.concat "--" k) (str (default-unit k v))))
         style))
     #js {}))
 
@@ -63,10 +66,12 @@
 
 (defn recompute-styles [ent]
   (let [tmp (h "img" (j/lit {:style (get-style ent)}))
-        style-string (-> (j/get tmp :style) (j/get :cssText))]
+        style-string (-> (j/get tmp :style) (j/get :cssText))
+        old-style (-> ent (j/get :element) (j/get :style) (j/get :cssText))]
     ; TODO: is there a faster way to copy styles than text conversion?
     ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
-    (aset ent "element" "style" style-string))
+    (when (not (coercive-= old-style style-string))
+      (aset ent "element" "style" style-string)))
   ent)
 
 (defn redraw
@@ -159,14 +164,18 @@
 (defn scene
   "Create a new scene data structure.
   
-  - `element` is an optional argument to set up the scene in an
-    HTML element other than `twge-default`."
-  [element]
-  (let [r (or element (.getElementById js/document "twge-default"))
-        s (j/lit {:element r})]
-    (j/assoc! r :innerHTML "")
+  - `props` is an optional object to set the scene properties. Here are some fields:
+    - `element` - HTML element to use other than `#twge-default`.
+    - `scale` - how much to scale the game by.
+    - `unit` - the default unit if unspecified (default is 'vim' which divides the screen up into 100 tiles)."
+  [props]
+  (let [s (assign #js {:element (.getElementById js/document "twge-default")
+                       :scale 4
+                       :unit "vim"}
+                  props nil)]
+    (j/assoc! (j/get s :element) :innerHTML "")
+    ;(recompute-styles s)
     (.addEventListener js/document "keydown" #(.push events %))
-    (.focus r)
     (j/assoc! s :add #(add s %))))
 
 (defn frame
