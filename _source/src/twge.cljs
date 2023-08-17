@@ -95,7 +95,7 @@
 (defn add
   "Add an entity to a parent.
   
-  - `parent` is usually going to be the scene."
+  - `parent` is usually the scene or a container entity."
   [parent entity]
   (j/call (j/get parent :element)
           :appendChild
@@ -170,8 +170,7 @@
   
   - `props` is an optional object to set the scene properties. Here are some fields:
     - `element` - HTML element to use other than `#twge-default`.
-    - `scale` - how much to scale the game by.
-    - `unit` - the default unit if unspecified (default is 'vim' which divides the screen up into 100 tiles)."
+    - `scale` - how much to scale the game by."
   [props]
   (let [s (assign #js {:element (.getElementById js/document "twge-default")
                        :scale 4

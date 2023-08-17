@@ -23,7 +23,7 @@ Redraw a scene or entity. If a scene is passed it recursively redraws all entiti
 
 Add an entity to a parent.
   
-  - `parent` is usually going to be the scene.
+  - `parent` is usually the scene or a container entity.
 
 ##  entity  ( props )
 
