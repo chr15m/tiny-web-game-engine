@@ -196,6 +196,29 @@
           #(let [queued-events (.splice events 0 (j/get events :length))]
              (res (j/lit [(- (js/Date.) now) queued-events]))))))))
 
+(defn bbox
+  "Get the bounding box of the entity's element.
+  The box returned has properties in pixels: `x`, `y`, `width`, `height`, `top`, `right`, `bottom`, `left`."
+  [entity]
+  (j/call (j/get entity :element) :getBoundingClientRect))
+
+(defn collided
+  "Check to see if an entity has collided with a list of other entities.
+
+  - `entity` is the entity you want to check for collisions.
+  - `entities` is the array of other entities you want to check for collisions with `entity`."
+  [entity entities overlap]
+  (let [target-bbox (bbox entity)
+        overlap (or overlap 0)]
+    (.filter entities
+             (fn [other-entity]
+               (when (not (coercive-= entity other-entity))
+                 (let [other-bbox (bbox other-entity)]
+                   (and (< (+ (j/get target-bbox :left) overlap) (j/get other-bbox :right))
+                        (> (- (j/get target-bbox :right) overlap) (j/get other-bbox :left))
+                        (< (+ (j/get target-bbox :top) overlap) (j/get other-bbox :bottom))
+                        (> (- (j/get target-bbox :bottom) overlap) (j/get other-bbox :top)))))))))
+
 (defn happened
   "Test if specific events happened in an event list (such as `events` passed back from the `frame` call).
   
