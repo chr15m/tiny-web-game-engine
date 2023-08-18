@@ -18,6 +18,7 @@
 ; TODO: function to get scene size
 
 (def unit "vmin")
+(def scale 8)
 
 (defn sleep
   "Returns a promise (so use `await`) which finishes after `ms` delay."
@@ -173,8 +174,8 @@
     - `scale` - how much to scale the game by."
   [props]
   (let [s (assign #js {:element (.getElementById js/document "twge-default")
-                       :scale 4
-                       :unit "vim"}
+                       :scale scale
+                       :unit "vmin"} ; unit not actually used yet
                   props nil)]
     (j/assoc! (j/get s :element) :innerHTML "")
     ;(recompute-styles s)
