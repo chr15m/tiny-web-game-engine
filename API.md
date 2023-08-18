@@ -65,6 +65,22 @@ Wait for the next animation frame.
   - `elapsed-time` is the number of milliseconds since the last frame.
   - `events` is a list of input events that occured since the last frame.
 
+##  size  ( entity )
+
+Get the size of an entity or scene in pixels `[w, h]` (before transformations are applied).
+
+##  bbox  ( entity )
+
+Get the bounding box of the entity's element.
+  The box returned has properties in pixels: `x`, `y`, `width`, `height`, `top`, `right`, `bottom`, `left`.
+
+##  collided  ( entity entities overlap )
+
+Check to see if an entity has collided with a list of other entities.
+
+  - `entity` is the entity you want to check for collisions.
+  - `entities` is the array of other entities you want to check for collisions with `entity`.
+
 ##  happened  ( events code event-type )
 
 Test if specific events happened in an event list (such as `events` passed back from the `frame` call).
