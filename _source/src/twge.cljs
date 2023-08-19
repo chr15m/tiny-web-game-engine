@@ -68,14 +68,23 @@
 
 ; *** drawing routines *** ;
 
+(def style-holder (h "img"))
+
+(defn style-to-string [styles]
+  (aset style-holder "style" "")
+  (-> styles
+      js/Object.keys
+      (.forEach #(-> style-holder .-style (.setProperty % (aget styles %)))))
+  (aget style-holder "style" "cssText"))
+
 (defn recompute-styles [ent]
-  (let [tmp (h "img" (j/lit {:style (get-style ent)}))
-        style-string (-> (j/get tmp :style) (j/get :cssText))
-        old-style (-> ent (j/get :element) (j/get :style) (j/get :cssText))]
-    ; TODO: is there a faster way to copy styles than text conversion?
-    ; https://github.com/hyperhype/hyperscript/blob/master/index.js#L82-L98
+  (let [element (j/get ent :element)
+        style (get-style ent)
+        style-string (style-to-string style)
+        old-style (j/get element :twge-style)]
     (when (not (coercive-= old-style style-string))
-      (aset ent "element" "style" style-string)))
+      (aset element "style" style-string)
+      (aset element "twge-style" style-string)))
   ent)
 
 (defn redraw
