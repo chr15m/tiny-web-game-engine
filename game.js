@@ -1,4 +1,4 @@
-import { emoji, container, scene, frame, happened, redraw } from "./twge.js";
+import { emoji, container, scene, frame, collided, redraw } from "./twge.js";
 // or "https://cdn.jsdelivr.net/gh/chr15m/tiny-web-game-engine/twge.js"
 
 var ghost = await emoji("👻");
@@ -10,6 +10,12 @@ s.add(ghost);
 
 while (true) {
   var [ elapsed, events ] = await frame();
+  let collisions = collided(ghost, [tree], 10);
+  if (collisions.length) {
+    tree.scale = 0.1;
+  } else {
+    tree.scale = 1;
+  }
   if (events.keyheld.ArrowRight) {
     ghost.x += 0.1;
   }
