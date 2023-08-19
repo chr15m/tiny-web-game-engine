@@ -30,6 +30,12 @@
   "Wait for an array of several awaits."
   (js/Promise.all.bind js/Promise))
 
+; functional js-delete
+(defn del [s k]
+  (when s
+    (js-delete s k))
+  s)
+
 ; *** entity related functions *** ;
 
 (defn load-image [url]
@@ -171,10 +177,39 @@
     (recompute-styles e)
     e))
 
-; *** scene related functions *** ;
+; *** event handling functions *** ;
 
-; TODO: move this global onto scene?
-(def events #js [])
+(defn cycle-events [events]
+  (j/lit
+    {:last (js/Object.assign #js {} (del events "last"))
+     :keydown {}
+     :keyup {}
+     :keyheld (if events (aget events "keyheld") #js {})}))
+
+; TODO: move events global onto scene?
+(def events (cycle-events nil))
+
+(defn add-key-event [events ev]
+  (let [code (j/get ev :code)
+        kind (j/get ev :type)
+        held? (-> events
+                  (j/get :last) (or #js {})
+                  (j/get :keyheld) (or #js {})
+                  (aget code))
+        keyheld (j/get events :keyheld)]
+    (cond (coercive-= kind "keyup")
+          (do
+            (del keyheld code)
+            (aset events kind code ev)
+            events)
+          (and (coercive-= kind "keydown") (not held?))
+          (do
+            (aset events kind code ev)
+            (aset events "keyheld" code ev)
+            events)
+          :else events)))
+
+; *** scene related functions *** ;
 
 (defn scene
   "Create a new scene data structure.
@@ -188,8 +223,8 @@
                        :unit "vmin"} ; unit not actually used yet
                   props nil)]
     (j/assoc! (j/get s :element) :innerHTML "")
-    ;(recompute-styles s)
-    (.addEventListener js/document "keydown" #(.push events %))
+    (.addEventListener js/document "keydown" #(add-key-event events %))
+    (.addEventListener js/document "keyup" #(add-key-event events %))
     (j/assoc! s :add #(add s %))))
 
 (defn frame
@@ -198,13 +233,19 @@
 
   - returns a Promise holding [elapsed-time, events]
   - `elapsed-time` is the number of milliseconds since the last frame.
-  - `events` is a list of input events that occured since the last frame."
+  - `events` is an object holding input events that occured since the last frame.
+  
+  The `events` key has subobjects that can be used like this:
+  - `events.keydown.ArrowUp` - check if arrow up key was pressed during this frame.
+  - `events.keyheld.KeyA` - check if the 'A' key is held.
+  - `events.keyup.Escape` - check if the `Escape` key was released during this frame."
   []
   (js/Promise.
     (fn [res]
       (let [now (js/Date.)]
         (js/requestAnimationFrame
-          #(let [queued-events (.splice events 0 (j/get events :length))]
+          #(let [queued-events (js/Object.assign #js {} events)]
+             (set! events (cycle-events events))
              (res (j/lit [(- (js/Date.) now) queued-events]))))))))
 
 (defn bbox
@@ -233,16 +274,3 @@
                         (> (- (j/get target-bbox :right) overlap) (j/get other-bbox :left))
                         (< (+ (j/get target-bbox :top) overlap) (j/get other-bbox :bottom))
                         (> (- (j/get target-bbox :bottom) overlap) (j/get other-bbox :top)))))))))
-
-(defn happened
-  "Test if specific events happened in an event list (such as `events` passed back from the `frame` call).
-  
-  - `events` is a list of events to pass in. Usually from the `frame` call.
-  - `code` is the key code to check on keydown events such as `LeftArrow` or `KeyA`.
-  - `event-type` is optional and is an event type like `keydown` or `keyup`."
-  [events code event-type]
-  (let [found (.filter events #(coercive-= (j/get % :code) code))
-        found (if event-type
-                (.filter found #(coercive-= (j/get % :type) event-type))
-                found)]
-    (not (coercive-= (j/get found :length) 0))))

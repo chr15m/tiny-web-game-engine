@@ -1,29 +1,26 @@
-import { emoji, image, scene, frame, happened, redraw } from "./twge.js";
-// import {wait, image, emoji, scene, frame, happened } from "https://cdn.jsdelivr.net/gh/chr15m/tiny-web-game-engine/twge.js"
+import { emoji, container, scene, frame, happened, redraw } from "./twge.js";
+// or "https://cdn.jsdelivr.net/gh/chr15m/tiny-web-game-engine/twge.js"
 
-var face = await emoji("👻");
-var square = await emoji("🟧", {"w": 1, "h": 1});
-var trees = await Promise.all(["🌳", "🌲"].map((c) => emoji(c, {"w": 1, "h": 1})));
-
-face.assign({"w": 1, "h": 1});
+var ghost = await emoji("👻", {"w": 1, "h": 1});
+var tree = await emoji("🌲", {"w": 1, "h": 1, "x": -2});
 
 var s = scene();
-s.add(square);
-s.add(face);
-
-var c = container({"x": 0}, trees);
-s.add(c);
-
-trees[0].x = -1;
-trees[1].x = 1;
+s.add(tree);
+s.add(ghost);
 
 while (true) {
   var [ elapsed, events ] = await frame();
-  if (happened(events, "ArrowRight")) {
-    face.x += 1;
+  if (events.keyheld.ArrowRight) {
+    ghost.x += 0.1;
   }
-  if (happened(events, "ArrowLeft")) {
-    face.x -= 1;
+  if (events.keyheld.ArrowLeft) {
+    ghost.x -= 0.1;
+  }
+  if (events.keyheld.ArrowUp) {
+    ghost.y += 0.1;
+  }
+  if (events.keyheld.ArrowDown) {
+    ghost.y -= 0.1;
   }
   redraw(s);
 }
