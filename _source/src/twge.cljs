@@ -11,11 +11,12 @@
 
 ; the weird clojurescript coding style in this file is to retain a small build size
 
-; TODO: collisions: https://stackoverflow.com/a/19614185
 ; TODO: effect function to apply css effects
+; TODO: check held keys
 ; TODO: catch browser errors and show a popup about opening the console
 ; TODO: throw kid-friendly error messages for things like missing args
 ; TODO: function to get scene size
+; TODO: transformed collisions: https://stackoverflow.com/a/19614185
 
 (def unit "vmin")
 (def scale 8)
@@ -208,7 +209,9 @@
 
 (defn bbox
   "Get the bounding box of the entity's element.
-  The box returned has properties in pixels: `x`, `y`, `width`, `height`, `top`, `right`, `bottom`, `left`."
+
+  The box returned has these properties (in pixels):
+  `x`, `y`, `width`, `height`, `top`, `right`, `bottom`, `left`."
   [entity]
   (j/call (j/get entity :element) :getBoundingClientRect))
 
@@ -216,7 +219,9 @@
   "Check to see if an entity has collided with a list of other entities.
 
   - `entity` is the entity you want to check for collisions.
-  - `entities` is the array of other entities you want to check for collisions with `entity`."
+  - `entities` is the array of other entities you want to check for collisions with `entity`.
+
+  Returns an array of entities that collided."
   [entity entities overlap]
   (let [target-bbox (bbox entity)
         overlap (or overlap 0)]
@@ -233,7 +238,7 @@
   "Test if specific events happened in an event list (such as `events` passed back from the `frame` call).
   
   - `events` is a list of events to pass in. Usually from the `frame` call.
-  - `code` is the key-code to check on keydown events.
+  - `code` is the key code to check on keydown events such as `LeftArrow` or `KeyA`.
   - `event-type` is optional and is an event type like `keydown` or `keyup`."
   [events code event-type]
   (let [found (.filter events #(coercive-= (j/get % :code) code))
