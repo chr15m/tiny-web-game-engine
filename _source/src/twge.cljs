@@ -98,8 +98,8 @@
     (when (or (-> el .-classList (.contains "twge-entity"))
               (-> el .-classList (.contains "twge")))
       (recompute-styles ent)
-      (.map (js/Array.from (aget ent "element" "children"))
-            #(redraw (aget % "entity")))))
+      (.forEach (js/Array.from (aget ent "element" "children"))
+                #(redraw (aget % "entity")))))
   ent)
 
 (defn add
@@ -166,7 +166,7 @@
     (j/assoc! e :assign (.bind assign nil e))
     (j/assoc! e :add #(add e %))
     (when children
-      (.map children (fn [c] (add e c))))
+      (.forEach children (fn [c] (add e c))))
     (recompute-styles e)
     e))
 
