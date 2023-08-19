@@ -157,7 +157,7 @@
         url (.concat "https://raw.githubusercontent.com/"
                      "twitter/twemoji/master/assets/svg/"
                      (.join hexes "-") ".svg")]
-    (image url props)))
+    (image url (assign #js {:w 1 :h 1} props nil))))
 
 (defn container
   "Create a new `entity` data structure that acts as a container for other entities.

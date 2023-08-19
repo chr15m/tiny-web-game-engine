@@ -1,8 +1,8 @@
 import { emoji, container, scene, frame, happened, redraw } from "./twge.js";
 // or "https://cdn.jsdelivr.net/gh/chr15m/tiny-web-game-engine/twge.js"
 
-var ghost = await emoji("👻", {"w": 1, "h": 1});
-var tree = await emoji("🌲", {"w": 1, "h": 1, "x": -2});
+var ghost = await emoji("👻");
+var tree = await emoji("🌲", {"x": -2});
 
 var s = scene();
 s.add(tree);
