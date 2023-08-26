@@ -55,7 +55,7 @@
 
 (defn get-style [props]
   (.reduce
-    #js ["x" "y" "w" "h" "scale"]
+    #js ["x" "y" "w" "h" "scale" "layer"]
     (fn [style k]
       (let [v (aget props k)]
         (when v

@@ -19,7 +19,7 @@
   --scale: 1;
   --sx: 1;
   --sy: 1;
-  --l: initial;
+  --layer: initial;
   --ax: center;
   --ay: center;
   --ox: 0px;
@@ -29,7 +29,7 @@
   transform: translate(var(--ox), calc(-1 * var(--oy))) translate3d(var(--x), calc(-1 * var(--y)), var(--z)) scale(var(--scale)) scale(var(--sx), var(--sy)) rotate(var(--r));
   transform-origin: var(--ay) var(--ax);
   opacity: var(--o);
-  z-index: var(--l);
+  z-index: var(--layer);
   position: absolute;
 }
 
