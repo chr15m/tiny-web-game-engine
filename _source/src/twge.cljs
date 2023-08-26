@@ -12,7 +12,6 @@
 ; the weird clojurescript coding style in this file is to retain a small build size
 
 ; TODO: effect function to apply css effects
-; TODO: check held keys
 ; TODO: catch browser errors and show a popup about opening the console
 ; TODO: throw kid-friendly error messages for things like missing args
 ; TODO: function to get scene size
@@ -27,7 +26,7 @@
   (p/delay ms))
 
 (def all
-  "Wait for an array of several awaits."
+  "Shortcut for Promise.all (wait for an array of several awaits)."
   (js/Promise.all.bind js/Promise))
 
 ; functional js-delete
