@@ -15,6 +15,7 @@
                                       frame twge/frame
                                       child twge/child
                                       assign twge/assign
+                                      effect twge/effect
                                       redraw twge/redraw
                                       container twge/container
                                       all twge/all

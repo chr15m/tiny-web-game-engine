@@ -81,6 +81,20 @@
     (aset entity k-or-props v)
     (js/Object.assign entity k-or-props)))
 
+(defn effect
+  "Set an effect (CSS class) on an entity.
+
+  - `entity` is the entity you want to set the effect on.
+  - `effect-name` is the CSS class you want to apply.
+  - `on?` is whether to add or remove the effect."
+  [entity effect-name on?]
+  (let [class-list (-> (j/get entity :element) (aget "classList"))]
+    (when class-list
+      (if on?
+        (.add class-list effect-name)
+        (.remove class-list effect-name))))
+  entity)
+
 (defn child
   "Get the nth child entity of an entity that has been added with `add`."
   [entity n]
