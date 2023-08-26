@@ -13,6 +13,7 @@
                                       emoji twge/emoji
                                       wait twge/wait
                                       frame twge/frame
+                                      child twge/child
                                       assign twge/assign
                                       redraw twge/redraw
                                       container twge/container

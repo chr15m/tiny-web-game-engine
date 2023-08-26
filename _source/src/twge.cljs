@@ -72,6 +72,11 @@
     (aset entity k-or-props v)
     (js/Object.assign entity k-or-props)))
 
+(defn child
+  "Get the nth child entity of an entity that has been added with `add`."
+  [entity n]
+  (-> entity (aget "element") (aget "children") (aget n) (aget "entity")))
+
 ; *** drawing routines *** ;
 
 (def style-holder (h "img"))
