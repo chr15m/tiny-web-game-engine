@@ -35,6 +35,15 @@
     (js-delete s k))
   s)
 
+(defn rnd
+  "Shortcut for Math.random() (generate a random number)."
+  [] (js/Math.random))
+
+(defn js-range
+  "Create an array of numbers from 0."
+  [size]
+  (.map (.fill (js/Array size) nil) (fn [_ idx] idx)))
+
 ; *** entity related functions *** ;
 
 (defn load-image [url]

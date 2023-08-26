@@ -18,5 +18,7 @@
                                       redraw twge/redraw
                                       container twge/container
                                       all twge/all
+                                      rnd twge/rnd
+                                      range twge/js-range
                                       collided twge/collided
                                       scene twge/scene}}}}}}
