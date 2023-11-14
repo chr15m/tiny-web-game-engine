@@ -9,6 +9,8 @@
     [applied-science.js-interop :as j]
     ["hyperscript" :as h]))
 
+; https://github.com/js13kGames/js13kBreakouts
+
 ; the weird clojurescript coding style in this file is to retain a small build size
 
 ; TODO: effect function to apply css effects
@@ -274,6 +276,13 @@
           #(let [queued-events (js/Object.assign #js {} events)]
              (set! events (cycle-events events))
              (res (j/lit [(- (js/Date.) now) queued-events]))))))))
+
+(defn size
+  "Get the size of an entity or scene in pixels `[w, h]` (before transformations are applied)."
+  [entity]
+  (let [el (j/get entity :element)]
+    (j/lit [(j/get el :clientWidth)
+            (j/get el :clientHeight)])))
 
 (defn bbox
   "Get the bounding box of the entity's element.
