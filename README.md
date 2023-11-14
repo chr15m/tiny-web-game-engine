@@ -21,10 +21,10 @@ See the [API documentation](./API.md) for details about each function of the eng
 
   while (true) {
     var [ elapsed, events ] = await frame();
-    if (happened(events, "ArrowRight")) {
+    if (events.keyheld.ArrowRight) {
       ghost.x += 64;
     }
-    if (happened(events, "ArrowLeft")) {
+    if (events.keyheld.ArrowLeft) {
       ghost.x -= 64;
     }
     redraw(s);
