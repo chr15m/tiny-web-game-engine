@@ -1,0 +1,3 @@
+{:paths ["src" "macros"]
+ :output-dir "public"
+ :extension "js"}

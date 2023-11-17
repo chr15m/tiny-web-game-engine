@@ -5,9 +5,14 @@
 
   - Entities at 0,0 appear in the center of the screen."
   (:require
-    [promesa.core :as p]
-    [applied-science.js-interop :as j]
-    ["hyperscript" :as h]))
+   #?@(:squint []
+       :default [[promesa.core :as p]])
+   #?@(:squint []
+       :default [[applied-science.js-interop :as j]])
+    ["hyperscript" :as h])
+  #?(:squint
+     (:require-macros [promesa.core :as p]
+                      [applied-science.js-interop :as j])))
 
 ; https://github.com/js13kGames/js13kBreakouts
 
@@ -34,7 +39,11 @@
 ; functional js-delete
 (defn del [s k]
   (when s
-    (js-delete s k))
+    #?(:squint
+       ;; TODO: add js-delete to squint
+       (js* "delete ~{}[~{}]" s k)
+       :default
+       (js-delete s k)))
   s)
 
 (defn rnd
@@ -59,7 +68,8 @@
 (defn default-unit [t v]
   (let [unit (when (not (coercive-= (.indexOf (j/lit [:x :y :w :h]) t) -1)) unit)]
     (if (and unit
-             (or (coercive-= (type v) js/Number)
+             (or (coercive-= #?(:squint (.-constructor v)
+                                             :default (type v)) js/Number)
                  (coercive-= (.toString (js/parseFloat v)) v)))
       (.concat "" v unit)
       v)))
@@ -140,7 +150,7 @@
 
 (defn add
   "Add an entity to a parent.
-  
+
   - `parent` is usually the scene or a container entity."
   [parent entity]
   (j/call (j/get parent :element)
@@ -178,7 +188,7 @@
 (defn emoji
   "Create a new `entity` data structure based on an emoji.
   Emoji entities will always be square. Set their size using the width (w) setting.
-  
+
   - `character` is the literal emoji character such as '👻'."
   [character props]
   (let [code-points (.map (js/Array.from character) #(j/call % :codePointAt 0))
@@ -190,7 +200,7 @@
 
 (defn container
   "Create a new `entity` data structure that acts as a container for other entities.
-  
+
   The container can hold multiple entities and can be added to a parent (like a scene or another container) as a single entity."
   [props children]
   (let [e (entity props)
@@ -242,7 +252,7 @@
 
 (defn scene
   "Create a new scene data structure.
-  
+
   - `props` is an optional object to set the scene properties. Here are some fields:
     - `element` - HTML element to use other than `#twge-default`.
     - `scale` - how much to scale the game by."
@@ -263,7 +273,7 @@
   - returns a Promise holding [elapsed-time, events]
   - `elapsed-time` is the number of milliseconds since the last frame.
   - `events` is an object holding input events that occured since the last frame.
-  
+
   The `events` key has subobjects that can be used like this:
   - `events.keydown.ArrowUp` - check if arrow up key was pressed during this frame.
   - `events.keyheld.KeyA` - check if the 'A' key is held.
