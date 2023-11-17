@@ -6,6 +6,7 @@
     "nbb": "^1.2.175",
     "shadow-cljs": "^2.22.10",
     "squint-cljs": "^0.4.48",
+    "squint-macros": "https://github.com/squint-cljs/squint-macros",
     "vite": "^5.0.0"
   },
   "scripts": {
