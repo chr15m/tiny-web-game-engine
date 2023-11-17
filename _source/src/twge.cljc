@@ -39,11 +39,7 @@
 ; functional js-delete
 (defn del [s k]
   (when s
-    #?(:squint
-       ;; TODO: add js-delete to squint
-       (js* "delete ~{}[~{}]" s k)
-       :default
-       (js-delete s k)))
+    (js-delete s k))
   s)
 
 (defn rnd
