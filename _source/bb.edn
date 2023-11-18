@@ -2,6 +2,7 @@
  {npm:install (shell "npm install")
   dev:squint (shell "npx squint watch")
   dev:vite (shell "npx vite public")
+  build (shell "npx vite build -c vite.config.js public/")
   -dev {:depends [dev:vite dev:squint]}
   dev {:depends [npm:install]
        :task (run '-dev {:parallel true})}}}
