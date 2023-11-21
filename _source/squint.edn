@@ -1,3 +1,4 @@
-{:paths ["src" "macros" "node_modules/squint-macros/src"]
+{:paths ["src" "macros"
+         "node_modules/@squint-cljs/macros/src"]
  :output-dir "public"
  :extension "js"}
